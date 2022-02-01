@@ -1,6 +1,5 @@
-FROM  bitnami/minideb:latest
-LABEL maintainer="medvedev.yp@gmail.com"
-LABEL version="4.0.4"
+FROM  library/centos:centos7
+LABEL version="4.2.5"
 LABEL description="Wazuh Docker Agent"
 ENV JOIN_MANAGER_MASTER_HOST=""
 ENV JOIN_MANAGER_WORKER_HOST=""
@@ -14,23 +13,19 @@ ENV FLASK_APP="register_agent.py"
 ENV FLASK_ENV="development"
 ENV FLASK_DEBUG=0
 ENV FLASK_BIND=0.0.0.0
-RUN install_packages \
-  procps curl apt-transport-https gnupg2 inotify-tools python-docker python3-pip python3-setuptools python3-dev gcc && \
-  curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | apt-key add - && \
-  echo "deb https://packages.wazuh.com/4.x/apt/ stable main" | tee /etc/apt/sources.list.d/wazuh.list && \
-  install_packages wazuh-agent && \
-  echo "deb http://security.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list && \
-  mkdir -p /usr/share/man/man1 && \
-  install_packages openjdk-8-jdk
+ENV t=t
 COPY . /var/ossec/
-WORKDIR /var/ossec/
-RUN pip3 --no-cache-dir install -r /var/ossec/requirements.txt && \
+COPY wazuh.repo /etc/yum.repos.d/
+RUN yum install --nogpgcheck -y procps curl apt-transport-https gnupg2 inotify-tools python-docker python3-pip python3-setuptools python3-devel gcc && \
+  rpm --import https://packages.wazuh.com/key/GPG-KEY-WAZUH && \
+  yum install --nogpgcheck -y wazuh-agent && \
+  pip3 --no-cache-dir install -r /var/ossec/requirements.txt && \
   rm -rf /var/ossec/requirements.txt && \
   chmod +x /var/ossec/register_agent.py && \
-  apt-get remove --purge -y python3-dev gcc && \
-  apt-get clean autoclean && \
-  apt-get autoremove -y && \
-  rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
+  yum remove -y python3-devel gcc && \
+  yum -y clean all && rm -rf /var/cache && \
   rm -rf  /tmp/* /var/tmp/* /var/log/*
+WORKDIR /var/ossec/
+COPY entrypoint.sh /bin/
 EXPOSE 5000
-ENTRYPOINT ["./register_agent.py"]
+ENTRYPOINT ["entrypoint.sh"]

@@ -24,7 +24,7 @@ Makefile
 Dockerfile
 README.md
 docker-compose.yaml
-entrypoint.sh
+#entrypoint.sh
 test.py
 register_agent.py__
 wazuh-daemonset.yaml

@@ -1,0 +1,4 @@
+include:
+  - project: 'ci-cd/templates'
+    ref: master
+    file: 'build.buildah.gitlab-ci.yml'

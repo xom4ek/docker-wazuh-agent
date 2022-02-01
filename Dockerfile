@@ -13,7 +13,6 @@ ENV FLASK_APP="register_agent.py"
 ENV FLASK_ENV="development"
 ENV FLASK_DEBUG=0
 ENV FLASK_BIND=0.0.0.0
-ENV t=t
 COPY . /var/ossec/
 COPY wazuh.repo /etc/yum.repos.d/
 RUN yum install --nogpgcheck -y procps curl apt-transport-https gnupg2 inotify-tools python-docker python3-pip python3-setuptools python3-devel gcc && \

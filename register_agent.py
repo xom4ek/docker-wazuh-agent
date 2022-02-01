@@ -173,7 +173,7 @@ def execute(cmd_list, stdin=None):
 
 
 def restart_ossec():
-    cmd = "/var/ossec/bin/ossec-control"
+    cmd = "/var/ossec/bin/wazuh-control"
     std_out, std_err, r_code = execute([cmd, "restart"])
     restarted = False
 
@@ -189,7 +189,7 @@ def restart_ossec():
 
 
 def status_ossec():
-    cmd = "/var/ossec/bin/ossec-control"
+    cmd = "/var/ossec/bin/wazuh-control"
     std_out, std_err, r_code = execute([cmd, "status"])
     status = False
     for line_output in std_out.split(os.linesep):

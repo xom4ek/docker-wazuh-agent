@@ -1,1 +1,1 @@
-NODE_NAME=$(cat /host/etc/hostname)
+export NODE_NAME=$(cat /host/etc/hostname)
